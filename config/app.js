@@ -78,7 +78,7 @@ module.exports = {
     | response.send('Hello', { ignoreEtag: true })
     |
     */
-    etag: true
+    etag: false
   },
 
   views: {
@@ -136,16 +136,16 @@ module.exports = {
   locales: {
     /*
     |--------------------------------------------------------------------------
-    | Driver
+    | Loader
     |--------------------------------------------------------------------------
     |
-    | The driver to be used for fetching and updating locales. Below is the
+    | The loader to be used for fetching and updating locales. Below is the
     | list of available options.
     |
     | file, database
     |
     */
-    driver: 'file',
+    loader: 'file',
 
     /*
     |--------------------------------------------------------------------------
@@ -157,7 +157,7 @@ module.exports = {
     | based on HTTP headers/query string.
     |
     */
-    locale: 'en'
+    locale: 'ru'
   },
 
   logger: {
@@ -172,7 +172,7 @@ module.exports = {
     | Available drivers are: `file` and `console`.
     |
     */
-    transport: 'console',
+    transport: 'file',
 
     /*
     |--------------------------------------------------------------------------
@@ -202,9 +202,9 @@ module.exports = {
     */
     file: {
       driver: 'file',
-      name: 'adonis-app',
-      filename: 'adonis.log',
-      level: 'info'
+      name: 'four-seasons-app',
+      filename: 'four-seasons.log',
+      level: 'error'
     }
   }
 }
