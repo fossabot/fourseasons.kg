@@ -10,9 +10,7 @@ class TourPriceSchema extends Schema {
         .notNullable()
       table.integer('tour_id')
         .notNullable()
-        .unsigned()
-      table.integer('tpt_id')
-        .unsigned()
+        .unsigned()      
     })
   }
 

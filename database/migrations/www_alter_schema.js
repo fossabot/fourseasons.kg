@@ -210,13 +210,7 @@ class AlterSchema extends Schema {
         .inTable('tours')
         .onDelete('RESTRICT')
         .onUpdate('CASCADE')
-        .withKeyName('fk_tour_id_tours_tour_prices')
-      table.foreign('tpt_id')
-        .references('id')
-        .inTable('tour_price_titles')
-        .onDelete('RESTRICT')
-        .onUpdate('CASCADE')
-        .withKeyName('fk_tpt_id_tour_price_titles_tour_prices')
+        .withKeyName('fk_tour_id_tours_tour_prices')      
     })
 
     /**
