@@ -16,11 +16,6 @@
 const Route = use('Route')
 const Env = use('Env')
 
-/** System control 
- * 
- * Begin
- */
-
 Route
   .group(() => {
     // System control
@@ -50,11 +45,6 @@ Route
     Route.post(':lang/tour', 'Tours/TourController.store')
   })
   .prefix(Env.get('API'))
-
-/**
- * End
- */
-
 
 
 Route.any('*', 'NuxtController.render')

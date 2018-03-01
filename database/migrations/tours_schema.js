@@ -25,9 +25,10 @@ class ToursSchema extends Schema {
       table.boolean('is_status')
         .notNullable()
         .defaultTo(false)
-      table.text('price')
+      table.decimal('min_price', 12,2)
         .notNullable()
-        .defaultTo('0')
+        .unsigned()
+        .defaultTo(0)
       table.timestamps()
     })
   }

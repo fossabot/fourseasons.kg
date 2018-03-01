@@ -103,11 +103,16 @@ class MainController {
                 .innerJoin('tour_descriptions', 'tours.id', 'tour_descriptions.tour_id')
                 .innerJoin('images', 'images.id', 'tours.img_id')
                 .select(
+                    'tours.tour_type_id',
                     'tours.day',
                     'tours.night',
-                    
+                    'tours.price',
+                    'tour_descriptions.tour_id',
                     'tour_descriptions.title',
-                    'tour_desc'
+                    'tour_descriptions.description',
+                    'images.url',
+                    'images.title as img_title',
+                    'images.description as img_description'
                 )
                 .where('tour_type_id', params.tour_type)
                 
