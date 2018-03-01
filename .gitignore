@@ -2,13 +2,13 @@
 node_modules
 
 #Ignoriting logger folder
-tmp/
+tmp
 
 #Ignoriting logger files 
 *.log
 
 #Ignoriting storage folder
-storage/
+storage
 
 # Keeping storage directory
 !storage/.gitkeep
