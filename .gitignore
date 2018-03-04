@@ -29,3 +29,5 @@ lib-cov
 
 # Nuxt.js
 .nuxt/
+yarn.lock
+package-lock.json

@@ -50,29 +50,6 @@ Route
   })
   .prefix(Env.get('API'))
 
-Route.get('\login', ({ request }) => {
-  // validation
-  const { name, email, password } = request.all()
 
-  // validation datas
-  const rules = {
-    name: 'required|min:3|max:80|unique:users, user_name',
-    email: 'required|email|min:5|max:80|unique:users, email',
-    password: 'required|confirm|min:6|max:60'
-  }
-
-  const validation = await validateAll(request.all(), rules)
-
-  if (validation.fails()) {
-    session
-      .withErrors(validation.messages())
-      .flashExcept(['password', 'csrf_token'])
-    return response.redirect('back')
-  }
-
-  return { 
-    type: 'success',
-    validate: validation }
-})
 
 Route.any('*', 'NuxtController.render')
