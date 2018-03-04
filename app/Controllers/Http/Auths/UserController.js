@@ -4,12 +4,12 @@
 const User = use('App/Models/Auths/User')
 const Group = use('App/Models/Auths/Group')
 const Database = use('Database')
+
 const Helpers = use('Helpers')
 const Logger = use('Logger')
 const Mail = use('Mail')
 const Hash = use('Hash')
 const Env = use('Env')
-
 
 const { validateAll } = use('Validator')
 
@@ -37,8 +37,7 @@ class UserController {
             user_name: 'required|min:3|max:80|unique:users, user_name',
             email: 'required|email|min:5|max:80|unique:users, email',
             group: 'required',
-            password: 'required|min:6|max:60',
-            confirm_password: 'required|min:6|max:60'
+            password: 'required|confirm|min:6|max:60'
         }
 
         const validation = await validateAll(request.all(), rules)
@@ -49,6 +48,7 @@ class UserController {
                 .flashExcept(['password', 'csrf_token'])
             return response.redirect('back')
         }
+
         // user access
 
 

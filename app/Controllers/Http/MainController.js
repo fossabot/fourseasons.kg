@@ -12,6 +12,8 @@ const Language = use('OTHERS/Language')
 
 const Tour = use('TOURS/Tour')
 const TourDescriptions = use('TOURS/TourDescription')
+const TourImage = use('TOURS/TourImage')
+const TourComment = use('TOURS/TourComment')
 
 const TourType = use('TOURS/TourType')
 const TourTypeDesciption = use('TOURS/TourTypeDescription')
@@ -27,11 +29,11 @@ class MainController {
      * @param { params } for detected language 
      */
     async indexMain({ params, session }) {
-        
+
         const lang = params.lang || 'ru'
-        
-        const lang_id = await Language.findBy('code', lang) 
-        
+
+        const lang_id = await Language.findBy('code', lang)
+
         session.put('lang_id', lang_id.id)
         try {
             const tourType = await TourType
@@ -47,9 +49,9 @@ class MainController {
                 )
                 .where('tour_type_descriptions.lang_id', lang_id.id)
                 .where('tour_types.is_status', 1)
-            
-            let news 
-            if(true) {
+
+            let news
+            if (true) {
                 news = await News
                     .query()
                     .innerJoin('news_descriptions', 'news.id', 'news_descriptions.news_id')
@@ -62,41 +64,38 @@ class MainController {
                         'images.title as img_title',
                         'images.description as img_description'
                     )
-                    .where('news_descriptions.lang_id', lang_id.id) 
+                    .where('news_descriptions.lang_id', lang_id.id)
                     .where('news.is_status', 1)
             }
 
             Database.close()
-            return { 
+            return {
                 type: 'success',
                 tourType: tourType,
                 news: news
             }
         } catch (error) {
             Logger.error('Error!!! Date: %s Message: %s', moment().format('YYYY-MM-DD HH:mm:ss'), error)
-            
+
             Database.close()
             return {
                 type: 'error',
                 message: error
             }
         }
-        
 
-        
+
+
     }
 
     async indexTours({ params, session }) {
+
+
+        const lang = params.lang || 'ru'
+        const lang_id = await Language.findBy('code', lang)
+
         
-        let lang, lang_id
-        
-        if(session.get('lang_id')) {
-            lang_id = session.get('lang_id')
-        } else {
-            lang = params.lang || 'ru'
-            lang_id = await Language.findBy('code', lang) 
-        }
-            
+
         try {
             const tours = await Tour
                 .query()
@@ -106,7 +105,7 @@ class MainController {
                     'tours.tour_type_id',
                     'tours.day',
                     'tours.night',
-                    'tours.price',
+                    'tours.min_price',
                     'tour_descriptions.tour_id',
                     'tour_descriptions.title',
                     'tour_descriptions.description',
@@ -114,9 +113,9 @@ class MainController {
                     'images.title as img_title',
                     'images.description as img_description'
                 )
-                .where('tour_type_id', params.tour_type)
-                
-
+                .where('tour_type_id', params.id)
+                .where('tours.is_status', 1)
+                .where('tour_descriptions.lang_id', lang_id.id)
             Database.close()
 
             return {
@@ -131,9 +130,64 @@ class MainController {
                 message: error
             }
         }
+    }
 
+    async indexTour({ params, session }) {
+
+        const lang = params.lang || 'ru'
+        const lang_id = await Language.findBy('code', lang)
         
-        
+        try {
+            const tours = await Tour
+                .query()
+                .innerJoin('tour_descriptions', 'tours.id', 'tour_descriptions.tour_id')
+                .innerJoin('images', 'images.id', 'tours.img_id')
+                .select(
+                    'tours.tour_type_id',
+                    'tours.day',
+                    'tours.night',
+                    'tours.min_price',
+                    'tour_descriptions.tour_id',
+                    'tour_descriptions.title',
+                    'tour_descriptions.programms',
+                    'tour_descriptions.included',
+                    'tour_descriptions.no_include',
+                    'tour_descriptions.description',
+                    'images.url',
+                    'images.title as img_title',
+                    'images.description as img_description'
+                )
+                .where('tour_descriptions.tour_id', params.id)
+                .where('tour_descriptions.lang_id', lang_id.id)
+                .where('tours.is_status', 1)
+
+            const tour_images = await TourImage
+                .query()
+                .innerJoin('tours', 'tour_images.tour_id', 'tours.id')
+                .innerJoin('images', 'tour_images.images_id', 'images.id')
+                .select(
+                    'images.url',
+                    'images.title as img_title',
+                    'images.description as img_description'
+                )
+                .where('tour_images.tour_id', params.id)
+
+            Database.close()
+
+
+            return {
+                type: 'success',
+                tours: tours,
+                tour_images: tour_images
+            }
+        } catch (error) {
+            Database.close()
+
+            return {
+                type: 'error',
+                message: error
+            }
+        }
     }
 }
 
