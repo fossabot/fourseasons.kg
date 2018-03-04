@@ -18,16 +18,24 @@ const Env = use('Env')
 Route
   .group(() => {
     // System control
-    Route.get('/login', 'Auths/UserController.userIndex')
-    Route.get('/createuser', 'Auths/UserController.createUserIndex')
+    // -- BEGIN -- //
+    
+    // create new user    
     Route.post('createuser', 'Auths/UserController.createUser').as('create')
-    Route.get('/users', 'Auths/UserController.userIndex')
-    Route.delete('userDelete/:id', 'Auths/UserController.userDelete')
-    Route.patch('userBlaUpdate/:id', 'Auths/UserController.userUpdate').as('update')
-
-    Route.get('/userUpdate/:id', 'Auths/UserController.userIndexUpdate')
-
+    
+    // confirm user
     Route.get('register/confirm/:token', 'Auths/UserController.userConfirm')
+
+    Route.get('/users', 'Auths/UserController.userIndex')
+
+    //Route.get('/login', 'Auths/UserController.login')
+    //Route.delete('userDelete/:id', 'Auths/UserController.userDelete')
+    //Route.patch('userUpdate/:id', 'Auths/UserController.userUpdate').as('update')
+
+    //Route.get('/userUpdate/:id', 'Auths/UserController.userIndexUpdate')
+
+
+    // -- END -- //
 
     // Main
     Route.get('/', 'MainController.indexMain')
@@ -47,6 +55,7 @@ Route
   })
   .prefix(Env.get('API'))
 
-Route.get('/login', 'Auths/UserController.test')
+  // test route
+Route.get('/login', 'Auths/UserController.login')
 
 Route.any('*', 'NuxtController.render')

@@ -23,7 +23,7 @@ class UserSchema extends Schema {
       table.string('email', 80)
         .notNullable()
         .unique('ui_users_email_unique')
-      table.string('confiramtion_token')
+      table.string('confirmation_token')
       table.boolean('is_active')
         .notNullable()
         .defaultTo(false)

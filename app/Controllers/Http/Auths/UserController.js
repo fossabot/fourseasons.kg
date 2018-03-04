@@ -3,6 +3,8 @@
 
 const User = use('App/Models/Auths/User')
 const Group = use('App/Models/Auths/Group')
+const Token = use('App/Models/Auths/Token')
+
 const Database = use('Database')
 
 const Helpers = use('Helpers')
@@ -21,34 +23,33 @@ class UserController {
      * Create new user
      * 
      * @param {request } get value in page
-     * @param { responce } send answer function 
+     * @param { response } send answer function 
      * @param { session} value time
      */
     async createUser({ request, response, session }) {
         // global variable
         var flag = false
 
-        // get value
-        const { display_name, user_name, email, group, password } = request.all()
-
         // validation datas
-        const rules = {
+        const validation = await validateAll(request.all(), {
             display_name: 'required|min:3|max:80',
             user_name: 'required|min:3|max:80|unique:users, user_name',
             email: 'required|email|min:5|max:80|unique:users, email',
             group: 'required',
             password: 'required|confirmed|min:6|max:60'
-        }
-
-        const validation = await validateAll(request.all(), rules)
-
+        })
+        
         if (validation.fails()) {
             session
                 .withErrors(validation.messages())
                 .flashExcept(['password', 'csrf_token'])
-            return response.redirect('back')
+            //response.redirect('back')
+            return {
+                type: 'error',
+                validate: validation
+            }
         }
-
+        console.log('im here')
         // user access
 
 
@@ -61,7 +62,7 @@ class UserController {
                 email: request.input('email'),
                 group_id: Number(request.input('group')),
                 password: request.input('password'),
-                confiramtion_token: randString.generate(255),
+                confirmation_token: randString.generate(255),
                 created_at: moment().format('YYYY-MM-DD HH:mm'),
                 updated_at: moment().format('YYYY-MM-DD HH:mm')
             })
@@ -70,20 +71,19 @@ class UserController {
             if (user) {
                 flag = true
             }
-
             // Send mail for activate user
             await Mail.send('auth.mail.message', user.toJSON(), (message) => {
                 message
                     .to(user.email)
                     .from(Env.get('MAIL_USERNAME'))
-                    .subject('Письмо для подтверждения')
-                    .embed(Helpers.publicPath('i.JPG'), 'i')
+                    .subject('Письмо для подтверждения')                    
             })
-
+            
+            
             // Send session value
             session.flash({
                 type: 'success',
-                notification: 'Ура добавлен новый пользователь! Пожалуйста потвердите почту по ссылке.'
+                notification: 'Добавлен новый пользователь! Пожалуйста потвердите почту по ссылке.'
             })
 
 
@@ -114,22 +114,27 @@ class UserController {
         return response.redirect('back')
     }
 
-    async userIndex() {
+    async userIndex({ session }) {
         // get access user
         // get data and validation
 
 
 
         // Select users list
-        const users = await User
+        const user = await User
             .query()
-            .inner('groups', 'users.group_id', 'groups.id')
+            .innerJoin('groups', 'users.group_id', 'groups.id')
             .select(
-                'user.'
+                'users.user_name',
+                'users.display_name',
+                'img_url',
+                'groups.title',
+                'users.email'
             )
+            .where('users.id', session.user_id)
 
         Database.close()
-        return { users: users.toJSON() }
+        return { users: user }
 
     }
 
@@ -149,18 +154,22 @@ class UserController {
         return { user: user.toJSON() }
     }
 
-    async userConfirm({ params, response }) {
+    async userConfirm({ params, response, session }) {
+
         const validation = await validateAll(params.token, {
-            token: 'require|string|min:255|max:255'
+            token: 'required|min:255|max:256'
         })
 
         if (validation.fails()) {
             session.withErrors(validation.messages())
-
-            return response.redirect('back')
+            // response.redirect('back')
+            return  {
+                type: 'error',
+                validate: validation
+            }
         }
-
-        const confirm = await User.find(params.token)
+        
+        const confirm = await User.findBy('confirmation_token', params.token)
 
         confirm.save('is_active', true)
 
@@ -169,31 +178,33 @@ class UserController {
             message: 'Вы подтвердили свою почту!'
         })
 
-        return response.redirect('/login')
+        // return response.redirect(Env.get('API') + '/login')
+        return  {
+            type: 'success',
+            validate: validation
+        }
     }
 
-    async test({ request, session }) {
+    async login({ request, session, response }) {
         // validation
-        const { name, email, password } = request.all()
+        // const { name, email, password } = request.all()
 
         // validation datas
-        const rules = {
+        
+        const validation = await validateAll(request.all(), {
             name: 'required|min:3|max:80|unique:users, user_name',
             email: 'required|email|min:5|max:80|unique:users, email',
             password: 'required|confirmed|min:6|max:60'
-        }
-
-        const validation = await validateAll(request.all(), rules)
+        })
 
         if (validation.fails()) {
             session
                 .withErrors(validation.messages())
                 .flashExcept(['password', 'csrf_token'])
-            return {
-                type: 'error',
-                validate: validation
-            }
+
+            return response.redirect('back')
         }
+
 
         return {
             type: 'success',
