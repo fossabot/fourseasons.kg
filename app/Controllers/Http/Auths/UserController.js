@@ -37,7 +37,7 @@ class UserController {
             user_name: 'required|min:3|max:80|unique:users, user_name',
             email: 'required|email|min:5|max:80|unique:users, email',
             group: 'required',
-            password: 'required|confirm|min:6|max:60'
+            password: 'required|confirmed|min:6|max:60'
         }
 
         const validation = await validateAll(request.all(), rules)
@@ -114,7 +114,7 @@ class UserController {
         return response.redirect('back')
     }
 
-    async userIndex({ view }) {
+    async userIndex() {
         // get access user
         // get data and validation
 
@@ -123,10 +123,13 @@ class UserController {
         // Select users list
         const users = await User
             .query()
-            .with('group')
-            .fetch()
+            .inner('groups', 'users.group_id', 'groups.id')
+            .select(
+                'user.'
+            )
+
         Database.close()
-        return  { users: users.toJSON() }
+        return { users: users.toJSON() }
 
     }
 
@@ -143,15 +146,15 @@ class UserController {
         const user = await User.find(params.id)
         Database.close()
 
-        return  { user: user.toJSON() }
+        return { user: user.toJSON() }
     }
 
     async userConfirm({ params, response }) {
-        const validation = await validateAll(params.token , {
+        const validation = await validateAll(params.token, {
             token: 'require|string|min:255|max:255'
         })
 
-        if(validation.fails()) {
+        if (validation.fails()) {
             session.withErrors(validation.messages())
 
             return response.redirect('back')
@@ -167,6 +170,35 @@ class UserController {
         })
 
         return response.redirect('/login')
+    }
+
+    async test({ request, session }) {
+        // validation
+        const { name, email, password } = request.all()
+
+        // validation datas
+        const rules = {
+            name: 'required|min:3|max:80|unique:users, user_name',
+            email: 'required|email|min:5|max:80|unique:users, email',
+            password: 'required|confirmed|min:6|max:60'
+        }
+
+        const validation = await validateAll(request.all(), rules)
+
+        if (validation.fails()) {
+            session
+                .withErrors(validation.messages())
+                .flashExcept(['password', 'csrf_token'])
+            return {
+                type: 'error',
+                validate: validation
+            }
+        }
+
+        return {
+            type: 'success',
+            validate: validation
+        }
     }
 }
 

@@ -31,3 +31,4 @@ lib-cov
 .nuxt/
 yarn.lock
 package-lock.json
+server.js

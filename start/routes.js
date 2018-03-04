@@ -18,7 +18,7 @@ const Env = use('Env')
 Route
   .group(() => {
     // System control
-    Route.get('/login', 'Auths/UserController.loginUserIndex')
+    Route.get('/login', 'Auths/UserController.userIndex')
     Route.get('/createuser', 'Auths/UserController.createUserIndex')
     Route.post('createuser', 'Auths/UserController.createUser').as('create')
     Route.get('/users', 'Auths/UserController.userIndex')
@@ -36,7 +36,7 @@ Route
     Route.get('/:lang/type/tour/:id', 'MainController.indexTour')
 
 
-
+    
     // Lang 
 
 
@@ -47,6 +47,6 @@ Route
   })
   .prefix(Env.get('API'))
 
-
+Route.get('/login', 'Auths/UserController.test')
 
 Route.any('*', 'NuxtController.render')
