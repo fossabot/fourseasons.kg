@@ -50,6 +50,7 @@
     "vue-scroll-to": "^2.2.0",
     "vue-scrollto": "^2.8.0",
     "vue-select": "^2.4.0",
+    "vue-social-sharing": "^2.3.3",
     "vue-types": "^1.1.3",
     "webpack": "^4.0.1",
     "youch": "^2.0.4"

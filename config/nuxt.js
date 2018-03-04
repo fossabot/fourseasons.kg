@@ -43,6 +43,7 @@ module.exports = {
     }]
   },
   css: [
+    '~/assets/css/clear.min.css'
   ],
   loading: {
     color: '#00FFCB'
@@ -70,6 +71,7 @@ module.exports = {
       ssr: false
     },
      '~/plugins/bootstrap-vue.js',
+     '~/plugins/vue-social-sharing',
     '~/plugins/i18n.js'
   ],
   modules: [

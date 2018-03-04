@@ -51,6 +51,8 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  position: fixed;
+  top: 0;
   .M-Back {
     width: 100%;
     background-color: #569D87;
