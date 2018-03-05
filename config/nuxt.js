@@ -48,9 +48,7 @@ module.exports = {
   loading: {
     color: '#00FFCB'
   },
-  plugins: [
-    '~/plugins/rest-api.js',
-    {
+  plugins: [{
       src: '~/plugins/vue-notifications.js',
       ssr: false
     },
@@ -70,15 +68,23 @@ module.exports = {
       src: '~/plugins/vue-select.js',
       ssr: false
     },
-     '~/plugins/bootstrap-vue.js',
-     '~/plugins/vue-social-sharing',
+    '~/plugins/bootstrap-vue.js',
+    '~/plugins/vue-social-sharing',
     '~/plugins/i18n.js'
   ],
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/proxy',
     'bootstrap-vue/nuxt'
   ],
   axios: {
+    proxy: true
+  },
+  proxy: {
+    // Simple proxy
+    '/api/': {
+      target: 'http://2.0.0.7:3000/',
+    },
   },
   build: {
     analyze: true,

@@ -2,16 +2,19 @@
   <div>
     <Menu/>
     <nuxt/>
+    <Mountains style="margin-bottom: -2px;"/>
     <MyFooter />
   </div>
 </template>
 <script>
 import Menu from '~/components/Menu'
 import MyFooter from '~/components/Footer'
+import Mountains from "~/assets/svg/mountains.svg"
 export default {
   components: {
     Menu,
-    MyFooter
+    MyFooter,
+    Mountains
   }
 }
 </script>

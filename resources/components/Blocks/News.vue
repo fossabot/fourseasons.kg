@@ -133,6 +133,7 @@ export default {
 .news--module {
 	width: 750px;
 	margin: 25px 25px 0 25px;
+	background-color: white;
 	.news--item {
 		border: solid 1px @color-main;
 		display: flex;

@@ -1,6 +1,5 @@
 <template>
 <div class="Menu">
-  <div class="M-Back"></div>
   <div class="M-Logo">
     <nuxt-link to="/" class="">
       <IconLogo id="logo-menu" />
@@ -22,28 +21,35 @@
           <nuxt-link to="/about/" class="">О НАС</nuxt-link>
         </li>
         <li>
-          <nuxt-link to="/contacts" class="">КОНТАКТЫ</nuxt-link>
+          <nuxt-link to="/contacts/" class="">КОНТАКТЫ</nuxt-link>
         </li>
       </ul>
     </nav>
   </div>
   <div class="M-Activator">
-    <v-select class="toggle-lang" :options="[{label: 'foo', value: 'Foo'}]"></v-select>
+    <b-dropdown id="ddown-left" text="Left align" variant="primary" class="m-2">
+      <b-dropdown-item href="#">Action</b-dropdown-item>
+      <b-dropdown-item href="#">Another action</b-dropdown-item>
+      <b-dropdown-item href="#">Something else here</b-dropdown-item>
+    </b-dropdown>
   </div>
-
 </div>
 </template>
 <script>
 import IconLogo from "~/assets/svg/logomenu.svg"
+import Burger from "~/assets/svg/burger.svg"
 
 export default {
+
   components: {
-    IconLogo
+    IconLogo,
+    Burger
   }
 }
 </script>
 <style lang="less">
 .Menu {
+  z-index: 99;
   width: 100%;
   height: 60px;
   position: fixed;
@@ -51,16 +57,8 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  position: fixed;
+  background-color: rgba(86, 157, 135, .8);
   top: 0;
-  .M-Back {
-    width: 100%;
-    background-color: #569D87;
-    height: 60px;
-    z-index: -1;
-    opacity: 0.8;
-    position: fixed
-  }
   .M-Logo {
     margin-left: 20px;
     width: 50px;
@@ -81,23 +79,30 @@ export default {
         float: left;
         a {
           text-decoration: none;
-          color: black;
+          color: white; // display: flex;
+          // justify-content: center;
+        }
+        .nuxt-link-exact-active::after {
+          width: 80%;
+          height: 2px;
+          content: '';
+          background-color: white;
+          display: block;
+          margin: 0 10%;
+          margin-top: 5px;
         }
       }
     }
   }
   .M-Activator {
     margin-right: 20px;
-    .toggle-lang {
-      .dropdown-toggle {
-        border: none;
-      }
-    }
   }
 }
 
-.nuxt-link-exact-active {
-  color: red !important;
+@media screen and (max-width: 749px) {
+  .Menu {
+    display: none;
+  }
 }
 </style>
 
