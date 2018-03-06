@@ -20,8 +20,8 @@
         <li>
           <nuxt-link to="/about/" class="">О НАС</nuxt-link>
         </li>
-        <li>
-          <nuxt-link to="/contacts/" class="">КОНТАКТЫ</nuxt-link>
+        <li v-scroll-to="'#Contacts, 80px'" class="v-scroll">
+         КОНТАКТЫ
         </li>
       </ul>
     </nav>
@@ -48,6 +48,10 @@ export default {
 }
 </script>
 <style lang="less">
+.v-scroll {
+  color: white;
+  cursor: pointer;
+}
 .Menu {
   z-index: 99;
   width: 100%;

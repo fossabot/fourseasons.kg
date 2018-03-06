@@ -4,36 +4,36 @@
     <NameLogo class="footer--icon-logo" />
   </div>
   <div class="footer--center">
-    <div class="footer--contacts">
+    <div class="footer--contacts" id="Contacts">
       <h3>Контакты</h3>
-      <div class="footer--contacts-item">
+      <a href="https://goo.gl/maps/eTTwaUSRK8R2" class="footer--contacts-item">
         <IconMap class="footer--icon-map" />
         <span>
           <p>Кыргызская Республика,
           720041 г. Бишкек пр. Чуй 92</p>
         </span>
-      </div>
-      <div class="footer--contacts-item">
+      </a>
+      <a href="mailto:office@fourseason.kg" class="footer--contacts-item">
         <IconPost class="footer--icon-message" />
         <span><p>office@fourseason.kg</p></span>
-      </div>
-      <div class="footer--contacts-item">
+      </a>
+      <a href="tel:+996 000 00-00-00" class="footer--contacts-item">
         <IconPhone class="footer--icon-phone" />
         <span><p>+996 000 00-00-00</p></span>
-      </div>
+      </a>
     </div>
     <div class="footer--social">
       <h3>Присоединяйтесь</h3>
       <div class="footer--social-item">
-        <nuxt-link to="/">
+        <a href="https://vk.com" target="_blank">
           <IconVk class="footer--icon-vk" />
-        </nuxt-link>
-        <nuxt-link to="/">
+        </a>
+        <a href="https://facebook.com" target="_blank">
           <IconFaceBook class="footer--icon-fb" />
-        </nuxt-link>
-        <nuxt-link to="/">
+        </a>
+        <a href="https://instagram.com" target="_blank">
           <IconInstagram class="footer--icon-inst" />
-        </nuxt-link>
+        </a>
       </div>
     </div>
     <div class="footer--subscribe">
@@ -53,17 +53,20 @@
         </span>
       </div>
     </div>
-    <div class="footer--bottom-item">
+    <div v-scroll-to="'#Top'" class="footer--bottom-item">
       <IconDown class="footer--icon-up" />
     </div>
-    <div class="footer--bottom-item fys">
-      <h3>Сайт разработан</h3>
-      <IconFys class="footer--icon-fys" />
-      <span>
+
+    <a class="footer--bottom-item fys" href='http://fys.kg/referral_site/fourseasons.kg' target="_blank">
+      <h3 class="fys-created">Сайт разработан</h3>
+      <div>
+        <IconFys class="footer--icon-fys" />
+        <span>
        <h3>Studios</h3>
         <p> Мы создаем будущее</p>
       </span>
-    </div>
+      </div>
+    </a>
   </div>
 </div>
 </template>
@@ -98,8 +101,8 @@ export default {
 @color-main-active : #ff6600;
 [class^="footer--icon-"] {
   fill: white;
-  height: 40px;
-  width: 40px;
+  height: 30px;
+  width: 30px;
 }
 
 .footer--icon-logo {
@@ -110,25 +113,11 @@ export default {
 .footer--icon-vk,
 .footer--icon-fb,
 .footer--icon-inst {
-  width: 60px;
-  height: 60px;
-}
-
-.footer--icon-vk {
+  width: 50px;
+  height: 50px;
   &:hover {
-    fill: #2a5885;
-  }
-}
-
-.footer--icon-fb {
-  &:hover {
-    fill: #4267b2;
-  }
-}
-
-.footer--icon-inst {
-  &:hover {
-    fill: #e583fd;
+    transform: scale(1.1, 1.1);
+    fill: #ffdc4f;
   }
 }
 
@@ -141,6 +130,10 @@ export default {
   width: 50px;
   height: 80px;
   transform: rotate(180deg);
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1, 1.1) rotate(180deg);
+  }
 }
 
 .footer--icon-fys {
@@ -151,7 +144,7 @@ export default {
 .footer--component {
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 20px;
   width: 100%;
   color: white;
   background-color: #493928;
@@ -168,7 +161,7 @@ export default {
     display: flex;
     justify-content: space-between;
     h3 {
-      font-size: 30px;
+      font-size: 24px;
       margin-bottom: 30px;
     }
     .footer--contacts {
@@ -177,6 +170,8 @@ export default {
         display: flex;
         align-items: center;
         margin: 15px 0;
+        text-decoration: none;
+        color: white;
         span {
           max-width: 350px;
           margin-left: 10px;
@@ -185,7 +180,7 @@ export default {
           align-content: center;
           display: flex;
           p {
-            font-size: 24px;
+            font-size: 18px;
           }
         }
       }
@@ -193,6 +188,7 @@ export default {
     .footer--social {
       * {
         transition: all 0s;
+        transition: transform .3s;
       }
       width: 100%;
       h3 {
@@ -247,22 +243,36 @@ export default {
       flex-direction: column;
       align-items: center;
       &.fys {
+        text-decoration: none;
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: flex-end;
+        color: white;
         h3 {
-          font-size: 18px;
+          font-size: 12px;
           margin: 0 5px;
         }
-        span {
-          h3 {
-            font-size: 33px;
-            font-family: "Arial", sans-serif;
-            font-weight: bold;
+        div {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          align-items: center;
+          span {
+            h3 {
+              font-size: 33px;
+              font-family: "Arial", sans-serif;
+              font-weight: bold;
+            }
+            p {
+              font-size: 10px;
+              text-align: center;
+            }
           }
-          p {
-            font-size: 10px;
-            text-align: center;
+        }
+        &:hover {
+          color: white;
+          svg {
+            transform: scale(1.05, 1.05)
           }
         }
       }
@@ -291,22 +301,23 @@ export default {
   .footer--component {
     .footer--top {}
     .footer--center {
-      flex-direction: column;
+      flex-wrap: wrap;
       justify-content: center;
-      align-items: center;
       h3 {
         text-align: center;
         margin-top: 20px;
       }
       .footer--contacts {
-        width: 400px;
+        width: 300px;
         .footer--contacts-item {
           span {
             p {}
           }
         }
       }
-      .footer--social {}
+      .footer--social {
+        width: 300px;
+      }
       .footer--subscribe {}
     }
     .footer--bottom {}
@@ -315,7 +326,30 @@ export default {
 
 @media screen and (max-width: 960px) {
   .footer--component {
-    .footer--top {}
+    .footer--bottom {
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      .footer--bottom-item {
+        .footer--bottom-item-logo {
+          display: flex;
+          justify-content: center;
+        }
+        &.fys {
+          justify-content: center;
+          flex-direction: column;
+          .fys-created {
+            font-size: 24px;
+            margin-bottom: 10px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .footer--component {
     .footer--center {
       flex-direction: column;
       justify-content: center;
@@ -323,27 +357,6 @@ export default {
       h3 {
         text-align: center;
         margin-top: 20px;
-      }
-      .footer--contacts {
-        width: 400px;
-        .footer--contacts-item {
-          span {
-            p {}
-          }
-        }
-      }
-      .footer--social {}
-      .footer--subscribe {}
-    }
-    .footer--bottom {
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      .footer--bottom-item {
-        .footer--bottom-item-logo {
-            display: flex;
-            justify-content: center;
-        }
       }
     }
   }

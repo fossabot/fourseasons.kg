@@ -9,10 +9,10 @@
     </div>
     <div class="main-text">
       <span>Туры по Кыргызстану по выгондым ценам</span>
-      <IconDown class="icon-down"/>
+      <IconDown v-scroll-to="'#Categories, 80px'" class="icon--down"/>
     </div>
   </section>
-  <Categories title="Туры по кыргызстану"/>
+  <Categories id="Categories" title="Туры по кыргызстану"/>
   <News title="Последнии новости" />
 </div>
 </template>
@@ -39,6 +39,13 @@ export default {
 
 
 <style lang="less">
+.icon--down {
+  transition: all .5s;
+    &:hover {
+    cursor: pointer;
+    transform: scale(1.1, 1.1);
+  }
+}
 .first-s {
   display: flex;
   flex-direction: column;
@@ -47,6 +54,7 @@ export default {
   height: 100vh;
   background-image: url('~static/3.png');
   background-size: cover;
+  background-position: center;
   .mainlogo {
     margin-top: 150px;
     width: 120px;
@@ -156,11 +164,11 @@ export default {
     .main-text {
       height: 140px;
       margin-top:30px;
-      svg{
-        margin-top: 10px;
+      span {
+        font-size: 24px;
       }
-      .M-Back2 {
-        height: 140px;
+      svg{
+        display: none;
       }
       h1{
         font-size: 1.7rem;

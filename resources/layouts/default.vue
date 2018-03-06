@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div id="Top">
     <Menu/>
+    <span class="top--free"></span>
     <nuxt/>
     <MyFooter />
   </div>
@@ -16,6 +17,11 @@ export default {
 }
 </script>
 <style>
+.top--free {
+  content: '';
+  height: 0px;
+  margin-bottom: 80px;
+}
 html
 {
   font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;

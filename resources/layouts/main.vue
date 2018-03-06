@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div id="Top">
     <Menu/>
     <nuxt/>
-    <Mountains style="margin-bottom: -2px;"/>
+    <Mountains style="margin-bottom: -4px;"/>
     <MyFooter />
   </div>
 </template>
