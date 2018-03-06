@@ -34,10 +34,12 @@ const globalMiddleware = [
 | // use
 | Route.get().middleware('auth')
 |
+Authenticated
 */
 const namedMiddleware = {
   auth: 'Adonis/Middleware/Auth',
-  access: 'App/Middleware/Access'
+  authenticated: 'App/Middleware/Authenticated'
+  // access: 'App/Middleware/Access'
 }
 
 /*

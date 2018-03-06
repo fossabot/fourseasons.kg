@@ -1,6 +1,7 @@
 'use strict'
 
 const Model = use('Model')
+const Env = use('Env')
 
 class User extends Model {
   static boot() {
@@ -14,6 +15,10 @@ class User extends Model {
      * check the hashPassword method
      */
     this.addHook('beforeCreate', 'User.hashPassword')
+  }
+
+  tokens() {
+    return this.hasMany('App/Models/Auths/Token')
   }
 }
 

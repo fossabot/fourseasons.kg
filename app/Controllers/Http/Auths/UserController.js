@@ -26,7 +26,7 @@ class UserController {
      * @param { response } send answer function 
      * @param { session} value time
      */
-    async createUser({ request, response, session }) {
+    async storeUser({ request, response, session }) {
         
         // validation datas
         const validation = await validateAll(request.all(), {
@@ -82,6 +82,11 @@ class UserController {
             })            
 
             Database.close()
+
+            return {
+                type: 'success',
+                message: 'new user'
+            }
         } catch (error) {
             // Send session value
             session.withErrors({
@@ -106,38 +111,78 @@ class UserController {
 
     async userIndex({ session }) {
         // get access user
+        
+
         // get data and validation
+        try{
+            // Select users list
+            const user = await User
+                .query()
+                .innerJoin('groups', 'users.group_id', 'groups.id')
+                .select(
+                    'users.user_name',
+                    'users.display_name',
+                    'img_url',
+                    'groups.title',
+                    'users.email'
+                )
+                .where('users.user_name', session.get('user_name'))
+            
+            Database.close()
+            
+            return { 
+                users: user 
+            }
+        } catch(error) {
+            Logger.error('Error!!! Date: %s Message: %s', moment().format('YYYY-MM-DD HH:mm:ss'), error)
 
-
-
-        // Select users list
-        const user = await User
-            .query()
-            .innerJoin('groups', 'users.group_id', 'groups.id')
-            .select(
-                'users.user_name',
-                'users.display_name',
-                'img_url',
-                'groups.title',
-                'users.email'
-            )
-            .where('users.id', session.user_id)
-
-        Database.close()
-        return { users: user }
+            return {
+                type: 'error',
+                message: error
+            }
+        }
+        
+       
 
     }
 
-    async userDelete({ params, session, response }) {
-        const user = await User.find(params.id)
-        await user.delete()
+    async destroyUser({ params, session, response }) {
+        console.log('User destroy')
 
-        session.flash({ notification: 'Пользователь удален!' })
+        try {
+            const { id } = params
+            if(id){
+                const user = await User.find(id)
+                await user.delete()
 
-        return response.redirect('back')
+                session.flash({ 
+                    type: 'succes',
+                    notification: 'Пользователь удален!' 
+                })
+                // return response.redirect('back')
+
+                return {
+                    type: 'succes',
+                    message: 'Пользователь удален'
+                }
+            }
+
+        } catch(error) {
+            Logger.error('Error!!! Date: %s Message: %s', moment().format('YYYY-MM-DD HH:mm:ss'), error)
+
+            return {
+                type: 'error',
+                message: error
+            }
+        }
+        
+        return {
+            type: 'attention',
+            message: 'Вы не выбрали пользователя'
+        }
     }
 
-    async userIndexUpdate({ params, view }) {
+    async updateUser({ params, view }) {
         const user = await User.find(params.id)
         Database.close()
 
@@ -188,11 +233,9 @@ class UserController {
     }
 
     async login({ request, auth, session, response }) {
-        // validation
-        // const { name, email, password } = request.all()
-
-        // validation datas
         
+        // validation datas
+        console.log('asdfasdf')
         const validation = await validateAll(request.all(), {
             user_name: 'required|min:3|max:80',
             password: 'required|min:6|max:60'
@@ -205,7 +248,9 @@ class UserController {
 
             return response.redirect('back')
         }
-
+        
+        const { user_name, password, remember } = request.all()
+        
         // login in system
         try {
             /**
@@ -213,22 +258,24 @@ class UserController {
             */
             const user = await User
                 .query()
-                .where('user_name', request.input('user_name'))
+                .where('user_name', user_name)
                 .where('is_active', true)
                 .first()
-
             /**
              * Verified user password and if verified check username and password
              */       
-            if (user) {
-                const passwordVerified = await Hash.verify(password, user.password)               
-                
-                if(passwordVerified) {
-                    await auth.remember(!!remember).attempt(username, password)
+            if (user) {                
+                const passwordVerified = await Hash.verify(password, user.password)
 
-                    session.put('user_name', request.input('user_name'))
+                if(passwordVerified) {
+                    await auth
+                    .remember(!!remember)
+                    .attempt(user_name, password)
                     
-                    return response.route('/')
+                    session.put('user_name', user_name)
+                    
+                    return response.redirect('/api/users', true)
+                    // return response.redirect('/profile')
                 }
             }
 
@@ -239,7 +286,10 @@ class UserController {
                 }
             })  
 
-            return response.redirect('back')
+            return  {
+                type: 'error'
+            }
+            response.redirect('back')
 
         } catch (error) {
             session.flash({
@@ -248,9 +298,14 @@ class UserController {
                     message: error
                 }
             })  
+            
+            Logger.error('Error!!! Date: %s Message: %s', moment().format('YYYY-MM-DD HH:mm:ss'), error)
 
+            return {
+                type: 'error',
+                message: error
+            }
         }
-
     }
 }
 
