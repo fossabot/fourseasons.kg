@@ -1,10 +1,15 @@
 <template>
-<div class="Menu">
+<div class="Menu" @click="CloseMenu">
   <div class="M-Logo">
     <nuxt-link to="/" class="">
       <IconLogo id="logo-menu" />
     </nuxt-link>
   </div>
+  <input id="menu--toogle" type="checkbox" v-model="isShowMenu" />
+  <label for="menu--toogle" class="menu--burger">
+  <Burger  />
+  </label>
+
   <div class="M-List">
     <nav>
       <ul>
@@ -21,17 +26,16 @@
           <nuxt-link to="/about/" class="">О НАС</nuxt-link>
         </li>
         <li v-scroll-to="'#Contacts, 80px'" class="v-scroll">
-         КОНТАКТЫ
+          КОНТАКТЫ
         </li>
       </ul>
     </nav>
   </div>
-  <div class="M-Activator">
-    <b-dropdown id="ddown-left" text="Left align" variant="primary" class="m-2">
-      <b-dropdown-item href="#">Action</b-dropdown-item>
-      <b-dropdown-item href="#">Another action</b-dropdown-item>
-      <b-dropdown-item href="#">Something else here</b-dropdown-item>
-    </b-dropdown>
+  <div class="M-Activator dropdown">
+      <button class="dropbtn">Русский</button>
+      <div class="dropdown-content">
+        <a href="#">English</a>
+      </div>
   </div>
 </div>
 </template>
@@ -40,7 +44,16 @@ import IconLogo from "~/assets/svg/logomenu.svg"
 import Burger from "~/assets/svg/burger.svg"
 
 export default {
-
+  data() {
+    return {
+      isShowMenu: false
+    }
+  },
+  methods: {
+    CloseMenu() {
+      this.isShowMenu = false;
+    }
+  },
   components: {
     IconLogo,
     Burger
@@ -52,6 +65,70 @@ export default {
   color: white;
   cursor: pointer;
 }
+
+.dropbtn {
+  background-color: transparent;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: rgba(86, 157, 135, 1);
+}
+
+.Menu * {
+  transition: all .5s;
+}
+
+.btn-lang {
+  color: white;
+  background-color: transparent;
+  border: none;
+}
+
+.dropdown-menu {
+  background-color: rgba(86, 157, 135, 1);
+  transition: none;
+  border: none;
+  * {
+    color: white;
+  }
+}
+
 .Menu {
   z-index: 99;
   width: 100%;
@@ -63,6 +140,11 @@ export default {
   align-items: center;
   background-color: rgba(86, 157, 135, .8);
   top: 0;
+  #menu--toogle,
+  .menu--burger {
+    display: none;
+    cursor: pointer;
+  }
   .M-Logo {
     margin-left: 20px;
     width: 50px;
@@ -99,13 +181,68 @@ export default {
     }
   }
   .M-Activator {
-    margin-right: 20px;
+    margin-right: 10px;
   }
 }
 
 @media screen and (max-width: 749px) {
   .Menu {
-    display: none;
+    height: 50px;
+    .M-Logo {
+      display: none;
+    }
+    .M-List {
+      visibility: hidden;
+      opacity: 0;
+      width: 100%;
+      z-index: 9999;
+      position: fixed;
+      top: -20px;
+      bottom: 0;
+      left: 0;
+      right: -20px;
+      background-color: rgba(86, 157, 135, .9);
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      nav {
+        ul {
+          flex-direction: column;
+          align-items: center;
+          li {
+            margin: 10px 0;
+            font-size: 24px;
+            * {
+              display: flex;
+              font-size: 24px;
+              flex-direction: column;
+            }
+          }
+        }
+      }
+    }
+    .menu--burger {
+      display: block;
+      z-index: 99999;
+      position: fixed;
+      margin-left: 10px;
+      top: 5px;
+      height: 40px;
+      width: 40px;
+    }
+    .M-Activator {
+      z-index: 99999;
+      position: fixed;
+      top: 0;
+      right: 0;
+    }
+    #menu--toogle {
+      &:checked~.M-List {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
   }
 }
 </style>

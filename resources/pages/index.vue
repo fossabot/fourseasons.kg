@@ -176,4 +176,31 @@ export default {
     }
   }
 }
+
+@media screen and (max-height: 480px) and (max-width: 900px) {
+    .first-s {
+    .mainlogo {
+      margin-top: 120px;
+      width: 80px;
+      height: 80px;
+    }
+    .namelogo {
+      margin-top: 15px;
+      width: 206px;
+    }
+    .main-text {
+      height: 140px;
+      margin-top:30px;
+      span {
+        font-size: 24px;
+      }
+      svg{
+        display: none;
+      }
+      h1{
+        font-size: 1.7rem;
+      }
+    }
+  }
+}
 </style>

@@ -68,14 +68,12 @@ module.exports = {
       src: '~/plugins/vue-select.js',
       ssr: false
     },
-    '~/plugins/bootstrap-vue.js',
     '~/plugins/vue-social-sharing',
     '~/plugins/i18n.js'
   ],
   modules: [
     '@nuxtjs/axios',
-    '@nuxtjs/proxy',
-    'bootstrap-vue/nuxt'
+    '@nuxtjs/proxy'
   ],
   axios: {
     proxy: true
