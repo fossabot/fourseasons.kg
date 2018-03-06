@@ -1,5 +1,5 @@
 <template>
-<div class="cat-main--component">
+<div class="cat-main--component" v-if="this.items != null">
   <h2 class="cat-main--title">{{ title }}</h2>
   <div class="cat-main--module" v-for="(item, index) in items" :key="index" :style="'background-image: url(/images/' + item.url +')'">
     <div class="cat-main--content">
@@ -29,7 +29,7 @@ export default {
   },
   data() {
     return {
-      items: []
+      items: null
     }
   }
 }
@@ -83,6 +83,7 @@ export default {
         height: 30px;
         font-size: 20px;
         padding-bottom: 20%;
+        text-transform: uppercase;
         &::after {
           width: 15%;
           height: 1px;

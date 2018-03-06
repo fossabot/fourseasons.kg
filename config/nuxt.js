@@ -86,7 +86,7 @@ module.exports = {
   },
   build: {
     analyze: true,
-    vendor: ['vue-i18n', 'izitoast', 'vue-notifications', 'vue-carousel', 'vue-highcharts', 'vue-select', '~/plugins/vue-scroll-to.js'],
+    vendor: ['vue-i18n', 'izitoast', 'vue-notifications', 'vue-carousel', 'vue-highcharts', 'vue-select'],
     extend(config) {
       const urlLoader = config.module.rules.find((rule) => rule.loader === 'url-loader')
       urlLoader.test = /\.(png|jpe?g|gif)$/

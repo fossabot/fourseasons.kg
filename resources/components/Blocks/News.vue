@@ -49,13 +49,13 @@ export default {
 				id: 0,
 				title: 'Запуск сайта',
 				description: 'Мы рады сообщить Вам о запуске сайта и хотели бы рассказать о его возможностях',
-				image: 'http://fys.kg/fourseasons.png',
+				image: '/images/fourseasons.png',
 				date: '01.03.2018',
 			}, {
 				id: 1,
 				title: 'Запуск сайта',
 				description: 'Мы рады сообщить Вам о запуске сайта и хотели бы рассказать о его возможностях',
-				image: 'http://fys.kg/fourseasons.png',
+				image: '/images/fourseasons.png',
 				date: '01.03.2018',
 			}]
 		}
