@@ -22,9 +22,9 @@ const { Ignitor } = require('@adonisjs/ignitor')
 new Ignitor(require('@adonisjs/fold'))
   .appRoot(__dirname)
   .fireHttpServer()
-  .then(() => {
+  /*.then(() => {
     return use('App/Services/Nuxt').build()
-  })
+  })*/
   .then(() => {
     use('Logger').info('Nuxt is ready to handle requests')
   })

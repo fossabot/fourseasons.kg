@@ -27,9 +27,7 @@ class UserController {
      * @param { session} value time
      */
     async createUser({ request, response, session }) {
-        // global variable
-        var flag = false
-
+        
         // validation datas
         const validation = await validateAll(request.all(), {
             display_name: 'required|min:3|max:80',
@@ -49,10 +47,10 @@ class UserController {
                 validate: validation
             }
         }
-        console.log('im here')
         // user access
-
-
+        
+        // Begin transactions
+        const trx = await Database.beginTransaction()
         // add user
         try {
             // Create new user
@@ -65,12 +63,8 @@ class UserController {
                 confirmation_token: randString.generate(255),
                 created_at: moment().format('YYYY-MM-DD HH:mm'),
                 updated_at: moment().format('YYYY-MM-DD HH:mm')
-            })
-            Database.close()
-
-            if (user) {
-                flag = true
-            }
+            }, trx)
+            
             // Send mail for activate user
             await Mail.send('auth.mail.message', user.toJSON(), (message) => {
                 message
@@ -79,14 +73,15 @@ class UserController {
                     .subject('Письмо для подтверждения')                    
             })
             
-            
+            trx.commit()
+
             // Send session value
             session.flash({
                 type: 'success',
                 notification: 'Добавлен новый пользователь! Пожалуйста потвердите почту по ссылке.'
-            })
+            })            
 
-
+            Database.close()
         } catch (error) {
             // Send session value
             session.withErrors({
@@ -97,20 +92,15 @@ class UserController {
             // Logger for error
             Logger.error('Error!!! Date: %s Message: %s', moment().format('YYYY-MM-DD HH:mm:ss'), error)
 
-            // Delete user
-            if (flag) {
-                try {
-                    await User
-                        .query()
-                        .where('user_name', user_name)
-                        .delete()
-
-                } catch (error) {
-                    Logger.error('Error!!! Date: %s Message: %s', moment().format('YYYY-MM-DD HH:mm:ss'), error)
-                }
+            // Rollback transaction
+            trx.rollback()
+            
+            return {
+                type: 'error',
+                message: 'Never call '
             }
         }
-
+        
         return response.redirect('back')
     }
 
@@ -168,48 +158,99 @@ class UserController {
                 validate: validation
             }
         }
-        
-        const confirm = await User.findBy('confirmation_token', params.token)
+        try {
+            const confirm = await User.findBy('confirmation_token', params.token)
 
-        confirm.save('is_active', true)
+            confirm.is_active = true
 
-        session.flash({
-            type: 'success',
-            message: 'Вы подтвердили свою почту!'
-        })
+            await confirm.save()
+         
+            session.flash({
+                type: 'success',
+                message: 'Вы подтвердили свою почту!'
+            })
 
-        // return response.redirect(Env.get('API') + '/login')
-        return  {
-            type: 'success',
-            validate: validation
+             // return response.redirect(Env.get('API') + '/login')
+            return  {
+                type: 'success',
+                message: 'Вы подтвердили свою почту!',
+                confirm: confirm
+            }
+
+        } catch (error) {
+            Logger.error('Error!!! Date: %s Message: %s', moment().format('YYYY-MM-DD HH:mm:ss'), error)
+
+            return {
+                type: 'error',
+                message: error
+            }
         }
     }
 
-    async login({ request, session, response }) {
+    async login({ request, auth, session, response }) {
         // validation
         // const { name, email, password } = request.all()
 
         // validation datas
         
         const validation = await validateAll(request.all(), {
-            name: 'required|min:3|max:80|unique:users, user_name',
-            email: 'required|email|min:5|max:80|unique:users, email',
-            password: 'required|confirmed|min:6|max:60'
+            user_name: 'required|min:3|max:80',
+            password: 'required|min:6|max:60'
         })
 
         if (validation.fails()) {
             session
                 .withErrors(validation.messages())
-                .flashExcept(['password', 'csrf_token'])
+                .flashExcept(['remember'])
 
             return response.redirect('back')
         }
 
+        // login in system
+        try {
+            /**
+            * Checking user in database 
+            */
+            const user = await User
+                .query()
+                .where('user_name', request.input('user_name'))
+                .where('is_active', true)
+                .first()
 
-        return {
-            type: 'success',
-            validate: validation
+            /**
+             * Verified user password and if verified check username and password
+             */       
+            if (user) {
+                const passwordVerified = await Hash.verify(password, user.password)               
+                
+                if(passwordVerified) {
+                    await auth.remember(!!remember).attempt(username, password)
+
+                    session.put('user_name', request.input('user_name'))
+                    
+                    return response.route('/')
+                }
+            }
+
+            session.flash({
+                notification: {
+                    type: 'warning',
+                    message: 'Мы не смогли подтвердить ваши полномочия. Убедитесь, что вы подтвердили свой адрес электронной почты.'
+                }
+            })  
+
+            return response.redirect('back')
+
+        } catch (error) {
+            session.flash({
+                notification: {
+                    type: 'error',
+                    message: error
+                }
+            })  
+
         }
+
     }
 }
 
