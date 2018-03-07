@@ -9,10 +9,10 @@
     </div>
     <div class="main-text">
       <span>Туры по Кыргызстану по выгондым ценам</span>
-      <IconDown v-scroll-to="'#Categories, 80px'" class="icon--down"/>
+      <IconDown v-scroll-to="'#Categories, 80px'" class="icon--down" />
     </div>
   </section>
-  <Categories id="Categories" title="Туры по кыргызстану"/>
+  <Categories id="Categories" title="Туры по кыргызстану" />
   <News title="Последнии новости" />
 </div>
 </template>
@@ -41,11 +41,12 @@ export default {
 <style lang="less">
 .icon--down {
   transition: all .5s;
-    &:hover {
+  &:hover {
     cursor: pointer;
     transform: scale(1.1, 1.1);
   }
 }
+
 .first-s {
   display: flex;
   flex-direction: column;
@@ -74,12 +75,12 @@ export default {
     height: 200px;
     margin-top: 3%;
     background-color: rgba(86, 157, 135, .5);
-    svg{
+    svg {
       width: 48px;
       height: 30px;
       margin: 20px 0;
     }
-    span{
+    span {
       margin-top: 20px;
       color: white;
       margin: 0;
@@ -122,9 +123,8 @@ export default {
     }
   }
 }
-@media screen and (min-width: 1441px){
 
-}
+@media screen and (min-width: 1441px) {}
 
 @media screen and (max-width: 1440px) and (min-width: 750px) {
   .first-s {
@@ -139,11 +139,17 @@ export default {
     }
     .main-text {
       height: 140px;
-      
+      span {
+        font-size: 36px;
+        margin-top: 10px;
+      }
+      svg {
+        width: 40px;
+      }
       .M-Back2 {
         height: 140px;
       }
-      .f-h1{
+      .f-h1 {
         margin: 0;
       }
     }
@@ -163,14 +169,14 @@ export default {
     }
     .main-text {
       height: 140px;
-      margin-top:30px;
+      margin-top: 30px;
       span {
         font-size: 24px;
       }
-      svg{
+      svg {
         display: none;
       }
-      h1{
+      h1 {
         font-size: 1.7rem;
       }
     }
@@ -178,7 +184,7 @@ export default {
 }
 
 @media screen and (max-height: 480px) and (max-width: 900px) {
-    .first-s {
+  .first-s {
     .mainlogo {
       margin-top: 120px;
       width: 80px;
@@ -190,14 +196,14 @@ export default {
     }
     .main-text {
       height: 140px;
-      margin-top:30px;
+      margin-top: 30px;
       span {
         font-size: 24px;
       }
-      svg{
+      svg {
         display: none;
       }
-      h1{
+      h1 {
         font-size: 1.7rem;
       }
     }

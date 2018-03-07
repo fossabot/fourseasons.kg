@@ -32,7 +32,8 @@
     </nav>
   </div>
   <div class="M-Activator dropdown">
-      <button class="dropbtn">Русский</button>
+      
+      <button class="dropbtn"><LanguageIcon />РУССКИЙ</button>
       <div class="dropdown-content">
         <a href="#">English</a>
       </div>
@@ -42,6 +43,7 @@
 <script>
 import IconLogo from "~/assets/svg/logomenu.svg"
 import Burger from "~/assets/svg/burger.svg"
+import LanguageIcon from "~/assets/svg/language.svg"
 
 export default {
   data() {
@@ -56,7 +58,8 @@ export default {
   },
   components: {
     IconLogo,
-    Burger
+    Burger,
+    LanguageIcon
   }
 }
 </script>
@@ -69,11 +72,19 @@ export default {
 .dropbtn {
   background-color: transparent;
   color: white;
-  padding: 16px;
+  padding: 15px;
   font-size: 16px;
   border: none;
   cursor: pointer;
   border-radius: 5px;
+  display: flex;
+  align-items: center;
+  outline: none;
+  svg{
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+  }
 }
 
 .dropdown {
@@ -99,7 +110,8 @@ export default {
 }
 
 .dropdown-content a:hover {
-  background-color: #f1f1f1
+  background-color: rgba(86, 157, 135, 1);
+  color: white;
 }
 
 .dropdown:hover .dropdown-content {
@@ -186,6 +198,15 @@ export default {
 }
 
 @media screen and (max-width: 749px) {
+  .dropbtn {
+  padding: 12.5px;
+  font-size: 15px;
+  svg{
+    width: 25px;
+    height: 25px;
+
+  }
+}
   .Menu {
     height: 50px;
     .M-Logo {
