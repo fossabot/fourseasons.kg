@@ -79,50 +79,6 @@ class TourController {
     }
   }
 
-  async categoryTour({ params }) {
-    const lang = params.lang || 'ru'
-    const lang_id = await Language.findBy('code', lang)
-
-    try {
-      let tour_type = await TourType
-        .query()
-        .innerJoin('tour_type_descriptions', 'tour_types.id', 'tour_type_descriptions.tour_type_id')
-        .select(
-          'tour_type_descriptions.tour_type_id',
-          'tour_type_descriptions.title'
-        )
-        .where('tour_type_descriptions.lang_id', lang_id.id)
-        .where('tour_types.is_status', 1)
-
-      for (let i = 0; i < tour_type.length; ++i) {
-        const tour = await Tour
-          .query()
-          .innerJoin('tour_descriptions', 'tours.id', 'tour_descriptions.tour_id')
-          .select(
-            'tour_descriptions.id',
-            'tour_descriptions.title as tour_title'
-          )
-          .where('tours.tour_type_id', tour_type[i].tour_type_id)
-          .where('tour_descriptions.lang_id', lang_id.id)
-          .where('tours.is_status', 1)
-
-        tour_type[i].tours = [
-          tour
-        ]
-      }
-
-      return {
-        type: 'success',
-        tour_type: tour_type
-      }
-    } catch (error) {
-      return {
-        type: 'error',
-        message: error
-      }
-    }
-  }
-
   async indexTours({ params, session }) {
     const lang = params.lang || 'ru'
     const lang_id = await Language.findBy('code', lang)
@@ -163,13 +119,18 @@ class TourController {
     }
   }
 
-  async create() {
-  }
-
   async storeTour({ request, response, session }) {
     try {
-      // tours      
-      const validation_tour = await validateAll(request.all(), {
+
+      // Validation data
+      const validation = await validateAll(request.all(), {
+        lang_id: 'required',
+        title: 'required',
+        programms: 'required',
+        included: 'required',
+        no_include: 'required',
+        description: 'required',
+        tour_id: 'required',
         tour_type_id: 'required',
         user_id: 'required',
         img_id: 'required',
@@ -179,27 +140,14 @@ class TourController {
         price: 'required'
       })
 
-      // tour_descriptions 
-      const validation_tour_description = await validateAll(request.all(), {
-        lang_id: 'required',
-        title: 'required',
-        programms: 'required',
-        included: 'required',
-        no_include: 'required',
-        description: 'required',
-        tour_id: 'required'
-      })
+      if (validation.fails()) {
+        session.withErrors(validation_tour.messages())
 
-      if (validation_tour.fails()) {
-        response.send(session.withErrors(validation_tour.messages()))
-
-        return response.redirect('back')
-      }
-
-      if (validation_tour_description.fails()) {
-        response.send(session.withErrors(validation_tour_description.messages()))
-
-        return response.redirect('back')
+        return {
+          type: 'error',
+          message: validation
+        }
+        // return response.redirect('back')
       }
 
       /* console.log({
@@ -282,17 +230,62 @@ class TourController {
 
   }
 
-  async show() {
-  }
 
-  async edit() {
-  }
-
-  async update() {
+  async update({ request, params, session }) {
+    
+    const validation = await validateAll(request.all(), {
+      
+    })
   }
 
   async destroy() {
   }
+
+  async categoryTour({ params }) {
+    const lang = params.lang || 'ru'
+    const lang_id = await Language.findBy('code', lang)
+
+    try {
+      let tour_type = await TourType
+        .query()
+        .innerJoin('tour_type_descriptions', 'tour_types.id', 'tour_type_descriptions.tour_type_id')
+        .select(
+          'tour_type_descriptions.tour_type_id',
+          'tour_type_descriptions.title'
+        )
+        .where('tour_type_descriptions.lang_id', lang_id.id)
+        .where('tour_types.is_status', 1)
+
+      for (let i = 0; i < tour_type.length; ++i) {
+        const tour = await Tour
+          .query()
+          .innerJoin('tour_descriptions', 'tours.id', 'tour_descriptions.tour_id')
+          .select(
+            'tour_descriptions.id',
+            'tour_descriptions.title as tour_title'
+          )
+          .where('tours.tour_type_id', tour_type[i].tour_type_id)
+          .where('tour_descriptions.lang_id', lang_id.id)
+          .where('tours.is_status', 1)
+
+        tour_type[i].tours = [
+          tour
+        ]
+      }
+
+      return {
+        type: 'success',
+        tour_type: tour_type
+      }
+    } catch (error) {
+      return {
+        type: 'error',
+        message: error
+      }
+    }
+  }
+
+
 }
 
 module.exports = TourController

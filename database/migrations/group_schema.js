@@ -10,7 +10,7 @@ class GroupSchema extends Schema {
       table.string('title', 20)
         .notNullable()
         .unique('ui_groups_title')
-      table.text('description')
+      table.string('description', 255)
     })
   }
 

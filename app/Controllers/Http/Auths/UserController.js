@@ -7,7 +7,6 @@ const Token = use('App/Models/Auths/Token')
 
 const Database = use('Database')
 
-const Helpers = use('Helpers')
 const Logger = use('Logger')
 const Mail = use('Mail')
 const Hash = use('Hash')
@@ -19,6 +18,77 @@ var randString = require('randomstring')
 var moment = require('moment')
 
 class UserController {
+    async indexTourTypes({ params, session }) {
+        const lang = params.lang || 'ru'
+        const lang_id = await Language.findBy('code', lang)
+
+        try {
+            const tourType = await TourType
+                .query()
+                .innerJoin('tour_type_descriptions', 'tour_types.id', 'tour_type_descriptions.tour_type_id')
+                .innerJoin('images', 'tour_types.img_id', 'images.id')
+                .select(
+                    'tour_type_descriptions.tour_type_id',
+                    'tour_type_descriptions.title',
+                    'tour_type_descriptions.description',
+                    'images.url',
+                    'images.title as img_title',
+                    'images.description as img_description'
+                )
+                .where('tour_type_descriptions.lang_id', lang_id.id)
+                .where('tour_types.is_status', 1)
+
+            return {
+                type: 'success',
+                tourType: tourType
+            }
+        } catch (error) {
+            Logger.error('Error!!! Date: %s Message: %s', moment().format('YYYY-MM-DD HH:mm:ss'), error)
+
+            return {
+                type: 'error',
+                message: error
+            }
+        }
+    }
+
+    async indexUser({ session }) {
+        // get access user
+
+
+        // get data and validation
+        try {
+            // Select users list
+            const user = await User
+                .query()
+                .innerJoin('groups', 'users.group_id', 'groups.id')
+                .select(
+                    'users.user_name',
+                    'users.display_name',
+                    'img_url',
+                    'groups.title',
+                    'users.email'
+                )
+                .where('users.user_name', session.get('user_name'))
+
+            Database.close()
+
+            return {
+                users: user
+            }
+        } catch (error) {
+            Logger.error('Error!!! Date: %s Message: %s', moment().format('YYYY-MM-DD HH:mm:ss'), error)
+
+            return {
+                type: 'error',
+                message: error
+            }
+        }
+
+
+
+    }
+
     /**
      * Create new user
      * 
@@ -27,16 +97,16 @@ class UserController {
      * @param { session} value time
      */
     async storeUser({ request, response, session }) {
-        
+
         // validation datas
         const validation = await validateAll(request.all(), {
             display_name: 'required|min:3|max:80',
             user_name: 'required|min:3|max:80|unique:users, user_name',
             email: 'required|email|min:5|max:80|unique:users, email',
-            group: 'required',
+            group_id: 'required',
             password: 'required|confirmed|min:6|max:60'
         })
-        
+
         if (validation.fails()) {
             session
                 .withErrors(validation.messages())
@@ -48,44 +118,48 @@ class UserController {
             }
         }
         // user access
-        
+
+        const { display_name, user_name, email, group_id, password } = request.all()
         // Begin transactions
         const trx = await Database.beginTransaction()
+        
         // add user
         try {
+            // const confirmation_token = randString.generate(255)
             // Create new user
             const user = await User.create({
-                display_name: request.input('display_name'),
-                user_name: request.input('user_name'),
-                email: request.input('email'),
-                group_id: Number(request.input('group')),
-                password: request.input('password'),
+                display_name: display_name,
+                user_name: user_name,
+                email: email,
+                group_id: Number(group_id),
+                password: password,
                 confirmation_token: randString.generate(255),
                 created_at: moment().format('YYYY-MM-DD HH:mm'),
                 updated_at: moment().format('YYYY-MM-DD HH:mm')
             }, trx)
-            
+
             // Send mail for activate user
             await Mail.send('auth.mail.message', user.toJSON(), (message) => {
                 message
                     .to(user.email)
                     .from(Env.get('MAIL_USERNAME'))
-                    .subject('Письмо для подтверждения')                    
+                    .subject('Письмо для подтверждения')
             })
-            
+
             trx.commit()
 
             // Send session value
             session.flash({
                 type: 'success',
                 notification: 'Добавлен новый пользователь! Пожалуйста потвердите почту по ссылке.'
-            })            
+            })
 
             Database.close()
 
             return {
                 type: 'success',
-                message: 'new user'
+                message: 'Добавлен новый пользователь! Пожалуйста потвердите почту по ссылке.',
+                user: user
             }
         } catch (error) {
             // Send session value
@@ -99,41 +173,57 @@ class UserController {
 
             // Rollback transaction
             trx.rollback()
-            
+
             return {
                 type: 'error',
-                message: 'Never call '
+                message: error
             }
         }
-        
+
         return response.redirect('back')
     }
 
-    async userIndex({ session }) {
-        // get access user
-        
+    async updateUser({ params, session, request }) {
 
-        // get data and validation
-        try{
-            // Select users list
+        const validation = await validateAll(request.all(), {
+            display_name: 'required|min:3|max:80',
+            user_name: 'required|min:3|max:80',
+            email: 'required|email|min:5|max:80',
+            group_id: 'required',
+            password: 'required|confirmed|min:6|max:60'
+        })
+
+        if (validation.fails()) {
+            session
+                .withErrors(validation.messages())
+                .flashExcept(['password', 'csrf_token'])
+            //response.redirect('back')
+            return {
+                type: 'error',
+                validate: validation
+            }
+        }
+
+        const { display_name, user_name, email, group_id, password } = request.all()
+        
+        try {
             const user = await User
                 .query()
-                .innerJoin('groups', 'users.group_id', 'groups.id')
-                .select(
-                    'users.user_name',
-                    'users.display_name',
-                    'img_url',
-                    'groups.title',
-                    'users.email'
-                )
-                .where('users.user_name', session.get('user_name'))
-            
-            Database.close()
-            
-            return { 
-                users: user 
-            }
-        } catch(error) {
+                .where('id', params.id)
+                .update({
+                    display_name: display_name,
+                    user_name: user_name,
+                    email: email,
+                    group_id: group_id,
+                    password: password
+                })   
+
+                return {
+                    type: 'success',
+                    message: 'Пользователь обновлен'
+                }
+        } catch (error) {
+            // Logger for error
             Logger.error('Error!!! Date: %s Message: %s', moment().format('YYYY-MM-DD HH:mm:ss'), error)
 
             return {
@@ -141,9 +231,10 @@ class UserController {
                 message: error
             }
         }
-        
-       
 
+        return {
+            user: user
+        }
     }
 
     async destroyUser({ params, session, response }) {
@@ -151,13 +242,13 @@ class UserController {
 
         try {
             const { id } = params
-            if(id){
+            if (id) {
                 const user = await User.find(id)
                 await user.delete()
 
-                session.flash({ 
+                session.flash({
                     type: 'succes',
-                    notification: 'Пользователь удален!' 
+                    notification: 'Пользователь удален!'
                 })
                 // return response.redirect('back')
 
@@ -167,7 +258,7 @@ class UserController {
                 }
             }
 
-        } catch(error) {
+        } catch (error) {
             Logger.error('Error!!! Date: %s Message: %s', moment().format('YYYY-MM-DD HH:mm:ss'), error)
 
             return {
@@ -175,18 +266,11 @@ class UserController {
                 message: error
             }
         }
-        
+
         return {
             type: 'attention',
             message: 'Вы не выбрали пользователя'
         }
-    }
-
-    async updateUser({ params, view }) {
-        const user = await User.find(params.id)
-        Database.close()
-
-        return { user: user.toJSON() }
     }
 
     async userConfirm({ params, response, session }) {
@@ -198,7 +282,7 @@ class UserController {
         if (validation.fails()) {
             session.withErrors(validation.messages())
             // response.redirect('back')
-            return  {
+            return {
                 type: 'error',
                 validate: validation
             }
@@ -209,14 +293,14 @@ class UserController {
             confirm.is_active = true
 
             await confirm.save()
-         
+
             session.flash({
                 type: 'success',
                 message: 'Вы подтвердили свою почту!'
             })
 
-             // return response.redirect(Env.get('API') + '/login')
-            return  {
+            // return response.redirect(Env.get('API') + '/login')
+            return {
                 type: 'success',
                 message: 'Вы подтвердили свою почту!',
                 confirm: confirm
@@ -233,9 +317,8 @@ class UserController {
     }
 
     async login({ request, auth, session, response }) {
-        
+
         // validation datas
-        console.log('asdfasdf')
         const validation = await validateAll(request.all(), {
             user_name: 'required|min:3|max:80',
             password: 'required|min:6|max:60'
@@ -248,9 +331,9 @@ class UserController {
 
             return response.redirect('back')
         }
-        
+
         const { user_name, password, remember } = request.all()
-        
+
         // login in system
         try {
             /**
@@ -263,17 +346,17 @@ class UserController {
                 .first()
             /**
              * Verified user password and if verified check username and password
-             */       
-            if (user) {                
+             */
+            if (user) {
                 const passwordVerified = await Hash.verify(password, user.password)
 
-                if(passwordVerified) {
+                if (passwordVerified) {
                     await auth
-                    .remember(!!remember)
-                    .attempt(user_name, password)
-                    
+                        .remember(!!remember)
+                        .attempt(user_name, password)
+
                     session.put('user_name', user_name)
-                    
+
                     return response.redirect('/api/users', true)
                     // return response.redirect('/profile')
                 }
@@ -284,11 +367,8 @@ class UserController {
                     type: 'warning',
                     message: 'Мы не смогли подтвердить ваши полномочия. Убедитесь, что вы подтвердили свой адрес электронной почты.'
                 }
-            })  
+            })
 
-            return  {
-                type: 'error'
-            }
             response.redirect('back')
 
         } catch (error) {
@@ -297,8 +377,8 @@ class UserController {
                     type: 'error',
                     message: error
                 }
-            })  
-            
+            })
+
             Logger.error('Error!!! Date: %s Message: %s', moment().format('YYYY-MM-DD HH:mm:ss'), error)
 
             return {
