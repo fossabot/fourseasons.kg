@@ -154,12 +154,12 @@ class AlterSchema extends Schema {
      * ALTER tour_comments
      */
     this.alter('tour_comments', (table) => {
-      table.foreign('tour_id')
+      table.foreign('tour_description_id')
         .references('id')
-        .inTable('tours')
+        .inTable('tour_descriptions')
         .onDelete('RESTRICT')
         .onUpdate('CASCADE')
-        .withKeyName('fk_tour_id_tours_tour_comments')
+        .withKeyName('fk_tour_description_id_tours_tour_comments')
     })
 
     /**

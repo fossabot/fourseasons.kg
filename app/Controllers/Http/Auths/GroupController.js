@@ -7,7 +7,6 @@ const Database = use('Database')
 const Logger = use('Logger')
 const { validateAll } = use('Validator')
 
-var randString = require('randomstring')
 var moment = require('moment')
 
 class GroupController {

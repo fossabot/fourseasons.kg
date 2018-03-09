@@ -17,8 +17,7 @@ const Env = use('Env')
 
 Route
   .group(() => {
-    // System control
-    // -- BEGIN -- //
+    // -- System control BEGIN -- //
     /** USER */
     // Get users
     Route.get('/users', 'Auths/UserController.indexUser')
@@ -54,13 +53,49 @@ Route
     Route.patch('access/:id', 'Auths/AccessController.updateAccess')
     // delete access
     Route.delete('access/:id', 'Auths/AccessController.destroyAccess')
-    // -- END -- //
+    // -- System control END -- //
 
-    /**  */
+    // -- OTHERS BEGIN --
+    /** Language */
+    // get language
+    Route.get('/language', 'Others/LanguageController.indexLanguage')
+    // create new language
+    Route
+      .post('language', 'Others/LanguageController.storeLanguage')
+      .validator('Language')
+    // update language
+    Route
+      .patch('language/:id', 'Others/LanguageController.updateLanguage')
+      .validator('Language')
+    Route.delete('language/:id', 'Others/LanguageController.destroyLanguage')
+    // -- OTHERS END --
 
-  
+    // -- BEGIN TOUR COMMENTS --
+    // get all tour comments
+    Route.get('/tourcomment', 'Tours/TourCommentController.indexTourComment')
+    // create tour comments
+    Route
+      .post('tourcomment/:id', 'Tours/TourCommentController.storeTourComment')
+      .validator('TourComment')
+    // update tour comments
+    Route
+      .patch('tourcomment/:id', 'Tours/TourCommentController.updateTourComment')
+    // delete tour comment
+    Route
+      .delete('tourcomment/:id', 'Tours/TourCommentController.destroyTourComment')
+
+    Route.get('/:lang/tourcomment/:id', 'Tours/TourCommentController.showTourComment')
+
+    // -- END TOUR COMMENTS --
+
+
+
     // TOURS
-    // -- BEGIN -- //   
+    // -- BEGIN -- // 
+    // get one tour  
+    Route.get('/:lang/tour/:id', 'Tours/TourController.showTour')
+    // get tours in category
+    Route.get('/:lang/categories/:id', 'Tours/TourController.indexTours')
     // create tour
     Route.post('tour', 'Tours/TourController.storeTour')
     // update tour
@@ -68,15 +103,15 @@ Route
     // delete tour
     Route.delete('tour/:id', 'Tours/TourController.destroyTour')
     
-    Route.get('/:lang', 'Tours/TourTypeController.indexTourTypes')
-    Route.get('/:lang/type/:id', 'Tours/TourController.indexTours')
-    Route.get('/:lang/type/tour/:id', 'Tours/TourController.indexTour')
-    Route.get('/:lang/categories', 'Tours/TourController.categoryTour')
+    
     // -- TOURS END -- //
 
     // TYPES TOUR
     // -- BEGIN --
-
+    
+    Route.get('/:lang', 'Tours/TourTypeController.indexTourTypes')
+    Route.get('/:lang/categories', 'Tours/TourTypeController.categoriesTour')
+    Route.get('/:lang/category/:id', 'Tours/TourTypeController.showTourType')
     // -- END --
 
     //  NEWS
@@ -84,6 +119,8 @@ Route
     Route.get('/:lang/news', 'News/NewsController.indexNews')
 
     // -- END --
+
+    
 
   })
   .prefix(Env.get('API'))

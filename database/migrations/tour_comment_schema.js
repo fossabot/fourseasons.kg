@@ -7,7 +7,7 @@ class TourCommentSchema extends Schema {
     this.down()
     this.create('tour_comments', (table) => {
       table.increments()
-      table.integer('tour_id')
+      table.integer('tour_description_id')
         .notNullable()
         .unsigned()
       table.boolean('is_status')

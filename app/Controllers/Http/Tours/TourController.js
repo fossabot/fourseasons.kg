@@ -1,10 +1,9 @@
 'use strict'
 
-// -- Additional 
-const Database = use('Database')
+// -- Additional --
 const Logger = use('Logger')
 const { validate } = use('Validator')
-
+const Database = use('Database')
 const moment = require('moment')
 // -- Additional END --
 
@@ -20,7 +19,7 @@ const TourType = use('TOURS/TourType')
 
 class TourController {
 
-  async indexTour({ params }) {
+  async showTour({ params }) {
     const lang = params.lang || 'ru'
     const lang_id = await Language.findBy('code', lang)
 
@@ -57,10 +56,7 @@ class TourController {
           'images.title as img_title',
           'images.description as img_description'
         )
-        .where('tour_images.tour_id', params.id)
-
-      Database.close()
-
+        .where('tour_images.tour_id', params.id)  
 
       return {
         type: 'success',
@@ -68,7 +64,6 @@ class TourController {
         tour_images: tour_images
       }
     } catch (error) {
-      Database.close()
 
       Logger.error('Error!!! Date: %s Message: %s', moment().format('YYYY-MM-DD HH:mm:ss'), error)
 
@@ -103,14 +98,12 @@ class TourController {
         .where('tour_type_id', params.id)
         .where('tours.is_status', 1)
         .where('tour_descriptions.lang_id', lang_id.id)
-      Database.close()
-
+      
       return {
         type: 'success',
         tours: tours
       }
     } catch (error) {
-      Database.close()
 
       return {
         type: 'error',
@@ -124,20 +117,21 @@ class TourController {
 
       // Validation data
       const validation = await validateAll(request.all(), {
-        lang_id: 'required',
-        title: 'required',
-        programms: 'required',
-        included: 'required',
-        no_include: 'required',
-        description: 'required',
-        tour_id: 'required',
         tour_type_id: 'required',
         user_id: 'required',
         img_id: 'required',
         day: 'required',
         night: 'required',
         is_status: 'required',
-        price: 'required'
+        
+        lang_id: 'required',
+        ru_title: 'required',
+        ru_programms: 'required',
+        ru_included: 'required',
+        ru_no_include: 'required',
+        ru_description: 'required',
+        tour_id: 'required',
+        
       })
 
       if (validation.fails()) {
@@ -206,7 +200,6 @@ class TourController {
 
 
       trx.commit()
-      Database.close()
 
       session.flash({
         type: 'success',
@@ -217,7 +210,6 @@ class TourController {
     } catch (error) {
 
       trx.rollback()
-      Database.close()
       session.withErrors({
         type: 'error',
         notification: 'Ошибка добавления!'
@@ -241,49 +233,7 @@ class TourController {
   async destroy() {
   }
 
-  async categoryTour({ params }) {
-    const lang = params.lang || 'ru'
-    const lang_id = await Language.findBy('code', lang)
-
-    try {
-      let tour_type = await TourType
-        .query()
-        .innerJoin('tour_type_descriptions', 'tour_types.id', 'tour_type_descriptions.tour_type_id')
-        .select(
-          'tour_type_descriptions.tour_type_id',
-          'tour_type_descriptions.title'
-        )
-        .where('tour_type_descriptions.lang_id', lang_id.id)
-        .where('tour_types.is_status', 1)
-
-      for (let i = 0; i < tour_type.length; ++i) {
-        const tour = await Tour
-          .query()
-          .innerJoin('tour_descriptions', 'tours.id', 'tour_descriptions.tour_id')
-          .select(
-            'tour_descriptions.id',
-            'tour_descriptions.title as tour_title'
-          )
-          .where('tours.tour_type_id', tour_type[i].tour_type_id)
-          .where('tour_descriptions.lang_id', lang_id.id)
-          .where('tours.is_status', 1)
-
-        tour_type[i].tours = [
-          tour
-        ]
-      }
-
-      return {
-        type: 'success',
-        tour_type: tour_type
-      }
-    } catch (error) {
-      return {
-        type: 'error',
-        message: error
-      }
-    }
-  }
+  
 
 
 }
