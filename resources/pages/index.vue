@@ -8,7 +8,7 @@
       <NameLogo />
     </div>
     <div class="main-text">
-      <span>Туры по Кыргызстану по выгондым ценам</span>
+      <span>Туры по Кыргызстану по выгодным ценам</span>
       <IconDown v-scroll-to="'#Categories, 80px'" class="icon--down" />
     </div>
   </section>
