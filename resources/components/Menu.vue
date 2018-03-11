@@ -1,7 +1,7 @@
 <template>
 <div class="Menu" @click="CloseMenu">
   <div class="M-Logo">
-    <nuxt-link to="/" class="">
+    <nuxt-link :to="'/' + $t('lang') +'/'" class="">
       <IconLogo id="logo-menu" />
     </nuxt-link>
   </div>
@@ -13,30 +13,21 @@
   <div class="M-List">
     <nav>
       <ul>
-        <li>
-          <nuxt-link to="/" class="">ГЛАВНАЯ</nuxt-link>
-        </li>
-        <li>
-          <nuxt-link to="/tours/" class="">ТУРЫ</nuxt-link>
-        </li>
-        <li>
-          <nuxt-link to="/news/" class="">НОВОСТИ</nuxt-link>
-        </li>
-        <li>
-          <nuxt-link to="/about/" class="">О НАС</nuxt-link>
+        <li v-for="item in items" :key="item.id">
+          <nuxt-link :to="'/' + $t('lang') + item.url">{{$t(String(item.lang))}}</nuxt-link>
         </li>
         <li v-scroll-to="'#Contacts, 80px'" class="v-scroll">
-          КОНТАКТЫ
+          {{$t('Contacts')}}
         </li>
       </ul>
     </nav>
   </div>
   <div class="M-Activator dropdown">
-      
-      <button class="dropbtn"><LanguageIcon />РУССКИЙ</button>
-      <div class="dropdown-content">
-        <a href="#">English</a>
-      </div>
+
+    <button class="dropbtn"><LanguageIcon />{{$t('Language')}}</button>
+    <div class="dropdown-content">
+      <a v-for="(item,index) in locales" :key="index" v-if="item != $t('lang')" @click="ToogleLang(item)">{{$i18n.messages[item].Language}}</a>
+    </div>
   </div>
 </div>
 </template>
@@ -51,9 +42,26 @@ export default {
       isShowMenu: false
     }
   },
+  computed: {
+    items() {
+      return this.$store.state.Menu
+    },
+    locales() {
+      return this.$store.state.locales
+    }
+  },
   methods: {
     CloseMenu() {
       this.isShowMenu = false;
+    },
+    ToogleLang(newlang) {
+      let lang = this.$i18n.locale;
+
+      if (this.$route.fullPath.indexOf('/' + lang + '/') === 0) {
+        this.$router.push(this.$route.fullPath.replace('/' + lang + '/', '/' + newlang + '/'))
+      } else {
+        this.$router.push(this.$route.fullPath.replace('/' + lang, '/' + newlang + '/'))
+      }
     }
   },
   components: {
@@ -76,11 +84,10 @@ export default {
   font-size: 16px;
   border: none;
   cursor: pointer;
-  border-radius: 5px;
   display: flex;
   align-items: center;
   outline: none;
-  svg{
+  svg {
     width: 30px;
     height: 30px;
     margin-right: 5px;
@@ -112,6 +119,7 @@ export default {
 .dropdown-content a:hover {
   background-color: rgba(86, 157, 135, 1);
   color: white;
+  cursor: pointer;
 }
 
 .dropdown:hover .dropdown-content {
@@ -199,14 +207,13 @@ export default {
 
 @media screen and (max-width: 749px) {
   .dropbtn {
-  padding: 12.5px;
-  font-size: 15px;
-  svg{
-    width: 25px;
-    height: 25px;
-
+    padding: 12.5px;
+    font-size: 15px;
+    svg {
+      width: 25px;
+      height: 25px;
+    }
   }
-}
   .Menu {
     height: 50px;
     .M-Logo {

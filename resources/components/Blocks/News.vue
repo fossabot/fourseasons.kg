@@ -42,20 +42,24 @@
 
 <script>
 export default {
-	props: ['title'],
+	props: {
+		title: {
+			type: String
+		}
+	},
 	data() {
 		return {
 			items: [{
 				id: 0,
 				title: 'Запуск сайта',
 				description: 'Мы рады сообщить Вам о запуске сайта и хотели бы рассказать о его возможностях',
-				image: '/images/fourseasons.png',
+				image: '/images/fourseasons.jpg',
 				date: '01.03.2018',
 			}, {
 				id: 1,
 				title: 'Запуск сайта',
 				description: 'Мы рады сообщить Вам о запуске сайта и хотели бы рассказать о его возможностях',
-				image: '/images/fourseasons.png',
+				image: '/images/fourseasons.jpg',
 				date: '01.03.2018',
 			}]
 		}
@@ -80,9 +84,11 @@ export default {
 	transition: all 0s;
 	cursor: pointer;
 }
+
 .news--module .news--content * {
 	transition: all 0s;
 }
+
 [class^="icon--"] {
 	fill: #bebebe;
 	height: 30px;
@@ -118,8 +124,7 @@ export default {
 		font-size: 30px;
 		font-weight: 200;
 		text-transform: uppercase;
-	}
-	// .news--all-link {
+	} // .news--all-link {
 	// 	width: 100%;
 	// 	a {
 	// 		color: @color-main !important;

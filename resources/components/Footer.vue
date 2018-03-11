@@ -5,12 +5,11 @@
   </div>
   <div class="footer--center">
     <div class="footer--contacts" id="Contacts">
-      <h3>Контакты</h3>
+      <h3>{{$t('Contacts')}}</h3>
       <a href="https://goo.gl/maps/eTTwaUSRK8R2" class="footer--contacts-item">
         <IconMap class="footer--icon-map" />
         <span>
-          <p>Кыргызская Республика,
-          720041 г. Бишкек пр. Чуй 92</p>
+          <p>{{$t('Address')}}</p>
         </span>
       </a>
       <a href="mailto:office@fourseason.kg" class="footer--contacts-item">
@@ -23,7 +22,7 @@
       </a>
     </div>
     <div class="footer--social">
-      <h3>Присоединяйтесь</h3>
+      <h3>{{$t('JoinNow')}}</h3>
       <div class="footer--social-item">
         <a href="https://vk.com" target="_blank">
           <IconVk class="footer--icon-vk" />
@@ -37,10 +36,10 @@
       </div>
     </div>
     <div class="footer--subscribe">
-      <h3>Подпишитесь на рассылку новостей</h3>
+      <h3>{{$t('SubscribeTite')}}</h3>
       <form class="footer--subscribe-item">
-        <input type="email" placeholder="Ваш Email">
-        <button>Подписаться</button>
+        <input type="email" :placeholder="$t('YourEmail')">
+        <button>{{$t('Subscribe')}}</button>
       </form>
     </div>
   </div>
@@ -49,7 +48,7 @@
       <div class="footer--bottom-item-logo">
         <span>
           <NameLogo class="footer--icon-logo2" />
-          <p>Все права защищены © 2018</p>
+          <p>{{$t('Copyrights')}}</p>
         </span>
       </div>
     </div>
@@ -58,12 +57,12 @@
     </div>
 
     <a class="footer--bottom-item fys" href='http://fys.kg/referral_site/fourseasons.kg' target="_blank">
-      <h3 class="fys-created">Сайт разработан</h3>
+      <h3 class="fys-created">{{$t('FYS_Created')}}</h3>
       <div>
         <IconFys class="footer--icon-fys" />
         <span>
        <h3>Studios</h3>
-        <p> Мы создаем будущее</p>
+        <p>{{$t('FYS_Slogan')}}</p>
       </span>
       </div>
     </a>
@@ -142,6 +141,7 @@ export default {
 }
 
 .footer--component {
+  z-index: 2;
   display: flex;
   flex-direction: column;
   padding: 20px;

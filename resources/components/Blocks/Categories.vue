@@ -11,25 +11,52 @@
           {{item.description}}
         </p>
       </div>
-      <nuxt-link :to="'/tours/category/' + item.tour_type_id" class="cat-main--more">
-        Подробнее
+      <nuxt-link :to="'/'+ $t('lang') + '/categories/' + item.tour_type_id" class="cat-main--more">
+        {{$t('More')}}
       </nuxt-link>
     </div>
   </div>
 </div>
+<PulseLoader v-else-if="this.items == null && isLoadError == false" />
+<ErrorLoader v-else :method="Get" />
 </template>
 
 <script>
+import PulseLoader from '~/components/Loader/Pulse.vue'
+import ErrorLoader from '~/components/Loader/Error.vue'
+
 export default {
-  props: ['title'],
+  props: {
+    title: {
+      type: String
+    }
+  },
   created() {
-    this.$axios.get('/api/'+'ru/').then((res) => {
-      this.items = res.data.tourType
-    })
+    this.Get()
   },
   data() {
     return {
-      items: null
+      items: null,
+      isLoadError: false
+    }
+  },
+  components: {
+    PulseLoader,
+    ErrorLoader
+  },
+  methods: {
+    Get() {
+      this.isLoadError = false
+      this.$axios.get('/api/' + this.$t('lang') + '/').then(
+        res => {
+          if (res.type = 'success')
+            this.items = res.data.tour_type
+          else if (res.type = 'error')
+            this.isLoadError = true
+        },
+        error => {
+          this.isLoadError = true
+        })
     }
   }
 }
@@ -132,7 +159,7 @@ export default {
       .cat-main--content {
         .cat-main--content-title {
           font-size: 18px;
-        padding-bottom: 15%;
+          padding-bottom: 15%;
         }
         .cat-main--content-description {
           font-size: 15px;

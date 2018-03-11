@@ -79,14 +79,18 @@ module.exports = {
     proxy: true
   },
   proxy: {
-    // Simple proxy
+    
     '/api/': {
-      target: 'http://2.0.0.7:3000/',
+      target: 'http://2.0.0.7:3000',
+      pathRewrite: {
+        '^/api/': '/api/'
+      }
     },
+    ws: true
   },
   build: {
     analyze: true,
-    vendor: ['vue-i18n', 'izitoast', 'vue-notifications', 'vue-carousel', 'vue-highcharts', 'vue-select'],
+    vendor: ['izitoast', 'vue-notifications', 'vue-carousel', 'vue-highcharts', 'vue-select'],
     extend(config) {
       const urlLoader = config.module.rules.find((rule) => rule.loader === 'url-loader')
       urlLoader.test = /\.(png|jpe?g|gif)$/

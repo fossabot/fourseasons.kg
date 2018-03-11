@@ -21,35 +21,35 @@ const Env = use('Env')
  * Begin
  */
 
-Route
-  .group(() => {
-    // System control
-    Route.get('/login', 'Auths/UserController.loginUserIndex')
-    Route.get('/createuser', 'Auths/UserController.createUserIndex')
-    Route.post('createuser', 'Auths/UserController.createUser').as('create')
-    Route.get('/users', 'Auths/UserController.userIndex')
-    Route.delete('userDelete/:id', 'Auths/UserController.userDelete')
-    Route.patch('userBlaUpdate/:id', 'Auths/UserController.userUpdate').as('update')
+// Route
+//   .group(() => {
+//     // System control
+//     Route.get('/login', 'Auths/UserController.loginUserIndex')
+//     Route.get('/createuser', 'Auths/UserController.createUserIndex')
+//     Route.post('createuser', 'Auths/UserController.createUser').as('create')
+//     Route.get('/users', 'Auths/UserController.userIndex')
+//     Route.delete('userDelete/:id', 'Auths/UserController.userDelete')
+//     Route.patch('userBlaUpdate/:id', 'Auths/UserController.userUpdate').as('update')
 
-    Route.get('/userUpdate/:id', 'Auths/UserController.userIndexUpdate')
+//     Route.get('/userUpdate/:id', 'Auths/UserController.userIndexUpdate')
 
-    Route.get('register/confirm/:token', 'Auths/UserController.userConfirm')
+//     Route.get('register/confirm/:token', 'Auths/UserController.userConfirm')
 
-    // Main
-    Route.get('/', 'MainController.indexMain')
-    Route.get('/:lang', 'MainController.indexMain')    
-    Route.get('/:lang/:tour_type', 'MainController.indexTours')
-
-    
-    // Lang 
+//     // Main
+//     Route.get('/', 'MainController.indexMain')
+//     Route.get('/:lang', 'MainController.indexMain')    
+//     Route.get('/:lang/:tour_type', 'MainController.indexTours')
 
     
+//     // Lang 
+
     
-    // Tour
     
-    Route.post(':lang/tour', 'Tours/TourController.store')
-  })
-  .prefix(Env.get('API'))
+//     // Tour
+    
+//     Route.post(':lang/tour', 'Tours/TourController.store')
+//   })
+//   .prefix(Env.get('API'))
 
 /**
  * End
