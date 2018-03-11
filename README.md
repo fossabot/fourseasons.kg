@@ -1,6 +1,8 @@
 <p align="center"><img width="400" src="https://raw.githubusercontent.com/nuxt/adonuxt/master/resources/assets/img/logo.png"></p>
 
 # AdoNuxt
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FFYS-Studios%2Ffourseasons.kg.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FFYS-Studios%2Ffourseasons.kg?ref=badge_shield)
+
 
 > [AdonisJS](http://adonisjs.com/) + [Nuxt.js](https://nuxtjs.org) = :fire:
 
@@ -54,3 +56,6 @@ See [AdonisJS features](http://adonisjs.com/docs/3.2/overview) and [Nuxt.js feat
 - [AdonisJS license](https://github.com/adonisjs/adonis-framework/blob/develop/LICENSE.txt)
 - [NuxtJS license](https://github.com/nuxt/nuxt.js/blob/master/LICENSE.md)
 - [VueJS license](https://github.com/vuejs/vue/blob/master/LICENSE)
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FFYS-Studios%2Ffourseasons.kg.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FFYS-Studios%2Ffourseasons.kg?ref=badge_large)
