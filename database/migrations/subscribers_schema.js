@@ -13,7 +13,7 @@ class SubscribersSchema extends Schema {
       table.boolean('is_status')
         .notNullable()
         .defaultTo(true)
-      table.datetime('date_subscribers')
+      table.timestamps()
     })
   }
 

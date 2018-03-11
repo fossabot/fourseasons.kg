@@ -19,7 +19,7 @@ class TourCommentSchema extends Schema {
         .notNullable()
       table.text('description')
         .notNullable()
-      table.datetime('date_add')
+      table.timestamps()
     })
   }
 

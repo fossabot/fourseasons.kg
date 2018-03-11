@@ -17,10 +17,7 @@ const TourType = use('TOURS/TourType')
 // -- END MODELS -- 
 
 class TourTypeController {
-  /** Main page
-     * 
-     * @param { params } for detected language 
-     */
+  
   async indexTourTypes({ params, session }) {
 
     const lang = params.lang || 'ru'
@@ -132,6 +129,14 @@ class TourTypeController {
         .where('tour_types.is_status', 1)
         .where('tour_types.id', params.id)
 
+      console.log(tour_type[0])
+      if (tour_type[0] == undefined) {
+        return {
+          type: '404',
+          message: 'Not found'
+        }
+      }
+
       return {
         type: 'success',
         tour_type: tour_type[0]
@@ -146,7 +151,8 @@ class TourTypeController {
     }
   }
 
-  async store() {
+  async store({ request }) {
+    
   }
 
   async update() {

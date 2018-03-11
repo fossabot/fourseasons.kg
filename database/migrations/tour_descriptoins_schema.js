@@ -15,6 +15,8 @@ class TourDescriptoinsSchema extends Schema {
         .unique('ui_tour_descriptions_title')
       table.text('programms')
         .notNullable()
+      table.text('price')
+        .notNullable()
       table.text('included')
         .notNullable()
       table.text('no_include')

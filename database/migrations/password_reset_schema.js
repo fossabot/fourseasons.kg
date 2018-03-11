@@ -11,7 +11,7 @@ class PasswordResetSchema extends Schema {
         .notNullable()
       table.string('token')
         .notNullable()
-      table.dateTime('date_add')
+      table.timestamps()
     })
   }
 

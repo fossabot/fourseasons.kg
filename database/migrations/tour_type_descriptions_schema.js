@@ -13,7 +13,7 @@ class TourTypeDescriptionsSchema extends Schema {
       table.string('title')
         .notNullable()
         .unique('ui_tour_type_descriptions_title')
-      table.text('descriptions')
+      table.text('description')
         .nullable()
       table.integer('tour_type_id')
         .notNullable()

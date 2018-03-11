@@ -197,48 +197,7 @@ class AlterSchema extends Schema {
         .onUpdate('CASCADE')
         .withKeyName('fk_img_id_images_tours_images')
     })
-
-    /**
-     * ALTER tour_prices
-     * 
-     * tpt_id - tour_price_title_id 
-     */
-
-    this.alter('tour_prices', (table) => {
-      table.foreign('tour_id')
-        .references('id')
-        .inTable('tours')
-        .onDelete('RESTRICT')
-        .onUpdate('CASCADE')
-        .withKeyName('fk_tour_id_tours_tour_prices')      
-    })
-
-    /**
-     * 
-     * ALTER tour_price_titles
-     *      
-     */
-    this.alter('tour_price_titles', (table) => {
-      table.foreign('tour_pr_id')
-        .references('id')
-        .inTable('tour_prices')
-        .onDelete('RESTRICT')
-        .onUpdate('CASCADE')
-        .withKeyName('fk_tour_pr_id_tour_prices_tour_price_titles')
-      table.foreign('tour_id')
-        .references('id')
-        .inTable('tours')
-        .onDelete('RESTRICT')
-        .onUpdate('CASCADE')
-        .withKeyName('fk_tour_id_tours_tour_price_titles')
-      table.foreign('lang_id')
-        .references('id')
-        .inTable('languages')
-        .onDelete('RESTRICT')
-        .onUpdate('CASCADE')
-        .withKeyName('fk_lang_id_languages_tour_price_titles')
-    })
-
+   
     /**
      * ALTER tours
      */
